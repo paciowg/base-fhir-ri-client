@@ -29,3 +29,9 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/*
