@@ -18,13 +18,13 @@
 $primary: #9E2A2B; // bootstrap originally has this set to #007BFF
 $secondary: #D8652B; // bootstrap originally has this set to #6C757D
 $success: #28A745;
-$danger: #dc3545;
+$danger: #DC3545;
 $warning: #FFC107;
 $info: #17A2B8;
 $light: #F8F9FA;
 $dark: #343A40;
 
-// App-specific background color
+// Project-specific background color (not a color variable in bootstrap)
 $background: #E1E6E1;
 
 @import 'bootstrap';
