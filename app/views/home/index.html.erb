@@ -1,6 +1,123 @@
-<h1>Landing page (Home#index)</h1>
-<p>
-    Find this page in app/views/home/index.html.erb <br />
-    Find the header partial at app/views/partials/_header.html.erb <br />
-    Find the footer partial at app/views/partials/_footer.html.erb <br />
-</p>
+<h1>This is the Landing page (Home#index)</h1>
+<h2>Customization</h2>
+<ul>
+    <li>
+        <strong>View Specific</strong>
+        <ul>
+            <li>
+                Bootstrap
+                <ul>
+                    <li>
+                        This site is configured to use
+                        <a href="https://getbootstrap.com/docs/4.3/getting-started/introduction/" 
+                                target="_blank">
+                            Bootstrap
+                        </a>
+                        the way it might be used anywhere else
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Bootstrap Toggle
+                <ul>
+                    <li>
+                        This site is configured to use
+                        <a href="https://bootstraptoggle.com" target="_target">bootstrap-toggle</a>
+                        the way it might be used anywhere else with some slight exception.
+                    </li>
+                    <li>
+                        In order to use bootstrap-toggle, you must give your input tag the 
+                        "bootstrap-toggle" class. <br /> For example, the following tag: <br />
+                        <% input_string = 'input class="bootstrap-toggle" type="checkbox" ' %>
+                        <% input_string += 'checked data-toggle="toggle" data-on="Bootstrap" ' %>
+                        <% input_string += 'data-off="Toggle" data-onstyle="primary" ' %>
+                        <% input_string += 'data-offstyle="secondary"' %>
+                        &lt;<%= input_string -%>&gt; <br />
+                        produces this:
+                    </li>
+                    <input class="bootstrap-toggle" type="checkbox" checked data-toggle="toggle" 
+                            data-on="Bootstrap" data-off="Toggle" data-onstyle="primary" 
+                            data-offstyle="secondary">
+                </ul>
+            </li>
+            <li>
+                jQuery
+                <ul>
+                    <li>
+                        This site is configured to use
+                        <a href="https://api.jquery.com/" target="_blank">jQuery</a>
+                        the way it might be used anywhere else
+                    </li>
+                    <li>
+                        If you're interested in seeing an example of it in use, feel free to look 
+                        at app/assets/javascripts/bootstrap-toggle-listener.js
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Landing Page
+                <ul>
+                    <li>The site's landing page is configured to be Home#index</li>
+                    <li>
+                        What you're looking at now can be found and edited at 
+                        app/views/home/index.html.erb
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Header
+                <ul>
+                    <li>
+                        You can find and edit the header partial at 
+                        app/views/partials/_header.html.erb
+                    </li>
+                    <li>
+                        It is automatically rendered throughout every page of the website. If you 
+                        wish to stop this from happening, simply go to 
+                        app/views/layouts/application.html.erb and remove the 
+                        "<%%= render 'partials/header' %>" tag.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Footer
+                <ul>
+                    <li>
+                        You can find and edit the footer partial at 
+                        app/views/partials/_footer.html.erb
+                    </li>
+                    <li>
+                        It is automatically rendered throughout every page of the website. If you 
+                        wish to stop this from happening, simply go to 
+                        app/views/layouts/application.html.erb and remove the 
+                        "<%%= render 'partials/footer' %>" tag.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Colors
+                <ul>
+                    <li>
+                        You can customize the color scheme by altering the $color variables at the 
+                        top of app/assets/stylesheets/application.scss
+                    </li>
+                    <li>
+                        These variables are defined before importing bootstrap, which allows you 
+                        to alter bootstrap's color definitions (like 
+                        <a href="https://getbootstrap.com/docs/4.0/utilities/colors/" 
+                                target="_blank">
+                            primary, secondary, etc.
+                        </a>
+                        ). 
+                    </li>
+                    <li>
+                        If you don't want your color scheme to override bootstrap's, simply delete 
+                        those $color definitions before "@import 'bootstrap'" at the top of
+                        app/assets/stylesheets/application.scss and either define 
+                        your colors after it or use the bootstrap color scheme.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
