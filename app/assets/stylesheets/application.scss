@@ -18,12 +18,13 @@
 // These are the bootstrap color variables. Changes here apply across project
 $primary: #9E2A2B; // bootstrap originally has this set to #007BFF
 $secondary: #A0A0A0; // bootstrap originally has this set to #6C757D
-$success: #28A745;
-$danger: #DC3545;
-$warning: #FFC107;
-$info: #17A2B8;
-$light: #F8F9FA;
-$dark: #343A40;
+$success: #28A745; // same as bootstrap
+$danger: #DC3545; // same as bootstrap
+$warning: #FFC107; // same as bootstrap
+$info: #17A2B8; // same as bootstrap
+$light: #F8F9FA; // same as bootstrap
+$dark: #343A40; // same as bootstrap
+$code-color: #009030; // bootstrap originally has this set to #E83E8C
 
 // Project-specific background color (not a color variable in bootstrap)
 $background: #E1E6E1;
