@@ -16,4 +16,5 @@
 //= require jquery3
 //= require jquery_ujs
 //= require bootstrap
+//= require bootstrap-toggle
 //= require_tree .
