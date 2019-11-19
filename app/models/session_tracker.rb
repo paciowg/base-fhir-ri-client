@@ -16,7 +16,7 @@ class SessionTracker
   end
 
   def self.prune() 
-    safe_hours = 5
+    safe_hours = 5 
     @sessions.delete_if{ |sessionID, session| (Time.now - session[:last_used]) > (safe_hours * 60 * 60) }
   end
 
