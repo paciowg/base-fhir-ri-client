@@ -1,22 +1,83 @@
-<h1>This is the Landing page (Home#index)</h1>
+<h1>This is the landing page (Home#index)</h1>
 <h3>Customization</h3>
 <ul>
     <li>
         <strong>Model</strong>
         <ul>
             <li>
-                Session Tracker
+                Session Handler
                 <ul>
                     <li>
-                        TODO
+                        Automatically establishes <code>SessionHandler</code> for this session 
+                        upon reaching <code>Home#index</code> (the landing page)
                     </li>
-                </ul>
-            </li>
-            <li>
-                Server Interaction
-                <ul>
                     <li>
-                        TODO
+                        For instruction on how to use, check out the 
+                        <a href="https://www.zombo.com" target="_blank">
+                            SessionHandler documentation
+                        </a>
+                    </li>
+                    <li>
+                        In essence, it handles both a FHIR server connection and session-specfic 
+                        storage in memory <br />
+                        After 2 straight hours of session inactivity, it is deleted to protect 
+                        against memory leaks
+                    </li>
+                    <li>
+                        Connection
+                        <ul>
+                            <li>
+                                Establishing <code>SessionHandler</code> initializes an instance 
+                                of <code>FhirServerInteraction</code> <br />
+                                Documentation for <code>FhirServerInteraction</code> can be seen 
+                                <a href="https://www.zombo.com" target="_blank">here</a>
+                            </li>
+                            <li>
+                                <strong>Requires configuration</strong> - must set 
+                                <code>@base_server_url</code> to the base url for the FHIR server 
+                                you want your client to connect to! <br />
+                                Also, if you intend on communicating with a server using OAuth2 
+                                authentication, remember to set <code>@oauth2_id</code> and 
+                                <code>@oauth2_secret</code> accordingly <br />
+                                These can be found at the top of 
+                                <code>app/models/fhir_server_interaction.rb</code> 
+                            </li>
+                            <li>
+                                There are 3 pertinent connection methods in 
+                                <code>SessionHandler</code> which can each be seen in more detail 
+                                <a href="https://www.zombo.com" target="_blank">here</a>
+                                <ul>
+                                    <li>
+                                        <code>SessionHandler.fhir_client</code> - returns the 
+                                        instance of <code>FHIR::Client</code>
+                                        (<a href="https://github.com/fhir-crucible/fhir_client" 
+                                                target="_blank">
+                                            documentation
+                                        </a>) that facilitates interaction with the FHIR server
+                                    </li>
+                                    <li>
+                                        <code>SessionHandler.reset_connection</code> - resets the
+                                        connection used by <code>FHIR::Client</code>, may be used 
+                                        to change FHIR servers
+                                    </li>
+                                    <li>
+                                        <code>SessionHandler.all_resources</code> - iterates 
+                                        through each bundle from a given search and returns 
+                                        an array of all the resulting resources
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Storage
+                        <ul>
+                            <li>
+                                Establishing <code>SessionHandler</code> initializes a 
+                                <code>Hash</code> for in-memory server-side session-specific 
+                                storage
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </li>
@@ -43,18 +104,20 @@
                 <ul>
                     <li>
                         This site is configured to use
-                        <a href="https://bootstraptoggle.com" target="_target">bootstrap-toggle</a>
-                        the way it might be used anywhere else with some slight exception.
+                        <a href="https://www.bootstraptoggle.com/" target="_target">
+                            bootstrap-toggle
+                        </a>
+                        the way it might be used anywhere else with some slight exception
                     </li>
                     <li>
                         In order to use bootstrap-toggle, you must give your input tag the 
-                        <code>.bootstrap-toggle</code> class. <br /> 
+                        <code>.bootstrap-toggle</code> class <br /> 
                         For example, the following tag: <br />
-                        <% input_string = 'input class="bootstrap-toggle" type="checkbox" ' %>
-                        <% input_string += 'checked data-toggle="toggle" data-on="Bootstrap" ' %>
-                        <% input_string += 'data-off="Toggle" data-onstyle="primary" ' %>
-                        <% input_string += 'data-offstyle="secondary"' %>
-                        <code>&lt;<%= input_string -%>&gt;</code> <br />
+                        <code>
+                            &lt;input class="bootstrap-toggle" type="checkbox" checked 
+                            data-toggle="toggle" data-on="Bootstrap" data-off="Toggle" 
+                            data-onstyle="primary" data-offstyle="secondary"&gt;
+                        </code> <br />
                         produces this:
                     </li>
                     <input class="bootstrap-toggle" type="checkbox" checked data-toggle="toggle" 
@@ -73,46 +136,6 @@
                     <li>
                         If you're interested in seeing an example of it in use, feel free to look 
                         at <code>app/assets/javascripts/bootstrap-toggle-listener.js</code>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                Landing Page
-                <ul>
-                    <li>The site's landing page is configured to be <code>Home#index</code></li>
-                    <li>
-                        What you're looking at now can be found and edited at 
-                        <code>app/views/home/index.html.erb</code>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                Header
-                <ul>
-                    <li>
-                        You can find and edit the header partial at 
-                        <code>app/views/partials/_header.html.erb</code>
-                    </li>
-                    <li>
-                        It is automatically rendered throughout every page of the website. If you 
-                        wish to stop this from happening, simply go to 
-                        <code>app/views/layouts/application.html.erb</code> and remove the 
-                        <code><%%= render 'partials/header' %></code> tag.
-                    </li>
-                </ul>
-            </li>
-            <li>
-                Footer
-                <ul>
-                    <li>
-                        You can find and edit the footer partial at 
-                        <code>app/views/partials/_footer.html.erb</code>
-                    </li>
-                    <li>
-                        It is automatically rendered throughout every page of the website. If you 
-                        wish to stop this from happening, simply go to 
-                        <code>app/views/layouts/application.html.erb</code> and remove the 
-                        <code><%%= render 'partials/footer' %></code> tag.
                     </li>
                 </ul>
             </li>
@@ -137,7 +160,48 @@
                         those <code>$color</code> definitions before 
                         <code>@import 'bootstrap';</code> at the top of 
                         <code>app/assets/stylesheets/application.scss</code> and either define 
-                        your colors after it or use the bootstrap color scheme.
+                        your colors after it or use the bootstrap color scheme
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Landing Page
+                <ul>
+                    <li>The site's landing page is configured to be <code>Home#index</code></li>
+                    <li>
+                        What you're looking at now can be found and edited at 
+                        <code>app/views/home/index.html.erb</code>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Header
+                <ul>
+                    <li>
+                        You can find and edit the header partial at 
+                        <code>app/views/partials/_header.html.erb</code>
+                    </li>
+                    <li>
+                        It is automatically rendered throughout every page of the website <br />
+                        If you wish to stop this from happening, simply go to 
+                        <code>app/views/layouts/application.html.erb</code> and remove the 
+                        <code><%%= render 'partials/header' %></code> tag
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Footer
+                <ul>
+                    <li>
+                        You can find and edit the footer partial at 
+                        <code>app/views/partials/_footer.html.erb</code>
+                    </li>
+                    <li>
+                        It is automatically rendered throughout every page of the website <br />
+                        If you 
+                        wish to stop this from happening, simply go to 
+                        <code>app/views/layouts/application.html.erb</code> and remove the 
+                        <code><%%= render 'partials/footer' %></code> tag
                     </li>
                 </ul>
             </li>

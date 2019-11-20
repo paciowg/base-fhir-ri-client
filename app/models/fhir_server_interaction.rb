@@ -1,21 +1,33 @@
-class ServerInteraction
-  
+class FhirServerInteraction
+
   # Automatically set to HAPI's public testing FHIR server
   # TODO - REMEMBER TO REPLACE WITH YOUR FHIR SERVER'S BASE URL
   @base_server_url = "http://hapi.fhir.org/baseR4"
 
-  def initialize
-    set_connection
+  # TODO - SET OAUTH2 ID AND OAUTH2 SECRET IF SERVER USES OAUTH2 AUTHENTICATION
+  @oauth2_id = 'example'
+  @oauth2_secret = 'secret'
+
+  def initialize(url = nil, oauth2_id = nil, oauth2_secret = nil)
+    connect(url, oauth2_id, oauth2_secret)
   end
 
-  def set_connection(url = nil)
-    url = url.nil? ? @base_server_url : url
-    @client = FHIR::Client.new(url)
+  def connect(url = nil, oauth2_id = nil, oauth2_secret = nil)
+    @base_server_url = url.nil? ? @base_server_url : url
+    @oauth2_id = oauth2_id.nil? ? @oauth2_id : oauth2_id
+    @oauth2_secret = oauth2_secret.nil? ? @oauth2_secret : oauth2_secret
+
+    @client = FHIR::Client.new(@base_server_url)
+    options = client.get_oauth2_metadata_from_conformance
+    unless options.empty?
+      @client.set_oauth2_auth(@oauth2_id, @oauth2_secret, options[:authorize_url], 
+          options[:token_url], options[:site])
+    end
     FHIR::Model.client = @client
   end
   
-  def get_resources(klasses = nil, search = nil)
-    replies = get_replies(klasses, search)
+  def all_resources(klasses = nil, search = nil)
+    replies = replies(klasses, search)
     return nil unless replies
     resources = []
     replies.each do |reply|
@@ -25,13 +37,13 @@ class ServerInteraction
     resources.flatten(1)
   end
 
-  def get_client
+  def client
     @client
   end
 
   private
   
-  def get_replies(klasses = nil, search = nil)
+  def all_replies(klasses = nil, search = nil)
     klasses = coerce_to_a(klasses)
     replies = []
     if klasses.present?
