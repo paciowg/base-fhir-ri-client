@@ -1,8 +1,8 @@
 # Base FHIR Client (Rails)
 
-Provides the boilerplate code for jumpstarting any rails-based FHIR client. 
-Configured for Heroku deployment (`rails_12factor` gem included, and db 
-configured to use `pg` instead of `sqlite3`)
+Provides the boilerplate code for jumpstarting any rails-based FHIR client.
+
+Configured for Heroku deployment.
 
 ## Use
 

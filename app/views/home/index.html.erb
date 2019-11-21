@@ -1,3 +1,6 @@
+<% sh_doc = "http://htmlpreview.github.io/?https://github.com/paciowg/base-fhir-client-rails/" %>
+<% sh_doc += "blob/master/doc/SessionHandler.html" %>
+
 <h1>This is the landing page (Home#index)</h1>
 <h3>Customization</h3>
 <ul>
@@ -14,7 +17,7 @@
                     </li>
                     <li>
                         For instruction on how to use, check out the 
-                        <a href="https://www.zombo.com" target="_blank">
+                        <a href="<%= sh_doc %>" target="_blank">
                             SessionHandler documentation
                         </a>
                     </li>
@@ -51,7 +54,7 @@
                             <li>
                                 There are 3 connection methods in <code>SessionHandler</code> 
                                 which can each be seen in more detail 
-                                <a href="https://www.zombo.com" target="_blank">here</a>
+                                <a href="<%= sh_doc %>" target="_blank">here</a>
                                 <ul>
                                     <li>
                                         <code>SessionHandler.fhir_client</code> - returns the 
@@ -86,7 +89,7 @@
                             <li>
                                 There are 3 storage methods in <code>SessionHandler</code> which 
                                 can each be seen in more detail 
-                                <a href="https://www.zombo.com" target="_blank">here</a>
+                                <a href="<%= sh_doc %>" target="_blank">here</a>
                                 <ul>
                                     <li>
                                         <code>SessionHandler.store</code> - stores 
