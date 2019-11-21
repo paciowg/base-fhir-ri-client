@@ -9,9 +9,7 @@ Configured for Heroku deployment.
 To use, just fork this repository and begin building your rails app according 
 to your own specs.
 
-### Customization
-
-#### View
+### View Configuration
 
 Configured to allow for immediate use of 
 [Bootstrap](https://getbootstrap.com/docs/4.3/getting-started/introduction/),
@@ -21,7 +19,7 @@ Configured to allow for immediate use of
 Also comes starts off with Header and Footer partials that autoload on all 
 pages, ready to be customized.
 
-#### Model
+### Model Configuration
 
 To track session-specifics server-side (including FHIR server connection and 
 session-based storage), this boilerplate is configured to use it's own custom 
