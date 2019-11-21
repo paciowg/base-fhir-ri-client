@@ -11,7 +11,21 @@ to your own specs.
 
 ### Customization
 
-TODO
+#### View
+
+Configured to allow for immediate use of 
+[Bootstrap](https://getbootstrap.com/docs/4.3/getting-started/introduction/),
+[bootstrap-toggle](https://www.bootstraptoggle.com/), and
+[jQuery](https://api.jquery.com/)
+
+Also comes starts off with Header and Footer partials that autoload on all 
+pages, ready to be customized.
+
+#### Model
+
+To track session-specifics server-side (including FHIR server connection and 
+session-based storage), this boilerplate is configured to use it's own custom 
+[SessionHandler](http://htmlpreview.github.io/?https://github.com/paciowg/base-fhir-client-rails/blob/master/doc/SessionHandler.html)
 
 ### Running
 
