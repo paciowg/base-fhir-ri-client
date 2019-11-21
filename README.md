@@ -67,12 +67,12 @@ furthering development of this base project, follow the below instructions.
 
 To pull in remote `base-fhir-client-rails` from github for local development:
 
-    ```
-    cd ~/path/to/your/workspace/
-    mkdir base-fhir-client-rails
-    cd base-fhir-client-rails
-    git clone https://github.com/paciowg/base-fhir-client-rails
-    ```
+```
+cd ~/path/to/your/workspace/
+mkdir base-fhir-client-rails
+cd base-fhir-client-rails
+git clone https://github.com/paciowg/base-fhir-client-rails
+```
 
 
 ## Copyright
