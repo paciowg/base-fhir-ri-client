@@ -68,7 +68,7 @@ class SessionHandler
   ##
   # Gets +FHIR::Client+ instance associated with the provided +session_id+
   # 
-  # Updates active timer for this session to prevent premature pruning
+  # Updates active timer for this session's connection to prevent premature pruning
   # 
   # *Params*
   #
@@ -89,7 +89,7 @@ class SessionHandler
   # Basically a helper method to provide more functionality on top of what the +FHIR::Client+ can 
   # already do
   # 
-  # Updates active timer for this session to prevent premature pruning
+  # Updates active timer for this session's connection to prevent premature pruning
   # 
   # *Params*
   # 
@@ -116,8 +116,6 @@ class SessionHandler
   ##
   # Stores +value+ in this sessions in-memory storage to be later retrieved by +key+
   # 
-  # Updates active timer for this session to prevent premature pruning
-  # 
   # *Params*
   # 
   # * +session_id+ - Indicates which session's storage to store +value+ in (use +session.id+)
@@ -134,7 +132,7 @@ class SessionHandler
   ##
   # Retrieves a value from storage by its +key+
   # 
-  # Updates active timer for this session to prevent premature pruning
+  # Updates active timer for this value to prevent premature pruning
   # 
   # *Params*
   #
@@ -149,7 +147,8 @@ class SessionHandler
 
 
   ##
-  # Updates last active time for value of +key+ to prevent premature pruning
+  # Updates last active time for value of +key+ to prevent premature pruning. Defaults to refresh 
+  # connection if no key is specified.
   # 
   # *Params*
   #

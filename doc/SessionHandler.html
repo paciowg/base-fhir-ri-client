@@ -87,8 +87,6 @@
     
     <li ><a href="#method-c-reset_connection">::reset_connection</a>
     
-    <li ><a href="#method-c-storage">::storage</a>
-    
     <li ><a href="#method-c-store">::store</a>
     
   </ul>
@@ -133,7 +131,7 @@
         
         <div class="method-heading">
           <span class="method-name">active</span><span
-            class="method-args">(session_id)</span>
+            class="method-args">(session_id, key = nil)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -142,24 +140,25 @@
 
         <div class="method-description">
           
-          <p>Updates last active time for session to prevent premature pruning</p>
+          <p>Updates last active time for value of <code>key</code> to prevent premature pruning. Defaults to refresh  connection if no key is specified.</p>
 
 <p><strong>Params</strong></p>
 <ul><li>
-<p><code>session_id</code> - indicates which session to refresh active status for (use <code>session.id</code>)</p>
+<p><code>session_id</code> - indicates which session to refresh <code>key</code> active status for (use <code>session.id</code>)</p>
+</li><li>
+<p><code>key</code> - <em>Optional</em> <em>param</em>, indicates which key to refresh expiration timer for, refreshes</p>
+
+<p>connection timer if nil/undefined</p>
 </li></ul>
           
           
 
           
           <div class="method-source-code" id="active-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 182</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">active</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">established?</span>(<span class="ruby-identifier">session_id</span>)
-    <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:active</span>] = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
-  <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">establish</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-keyword">end</span>
+            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">active</span>(<span class="ruby-identifier">session_id</span>, <span class="ruby-identifier">key</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">cache_key</span> = <span class="ruby-identifier">session_id</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;--&quot;</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">key</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;connection&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">key</span>)
+  <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">cache_key</span>, <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">cache_key</span>), <span class="ruby-value">expires_in:</span> <span class="ruby-ivar">@expiry_time</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -188,7 +187,7 @@
 
 <p>Basically a helper method to provide more functionality on top of what the <code>FHIR::Client</code> can  already do</p>
 
-<p>Updates active timer for this session to prevent premature pruning</p>
+<p>Updates active timer for this session&#39;s connection to prevent premature pruning</p>
 
 <p><strong>Params</strong></p>
 <ul><li>
@@ -205,10 +204,10 @@
 
           
           <div class="method-source-code" id="all_resources-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 116</span>
+            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 110</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">all_resources</span>(<span class="ruby-identifier">session_id</span>, <span class="ruby-identifier">klasses</span>, <span class="ruby-identifier">search</span> = {})
   <span class="ruby-identifier">active</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:fsi</span>].<span class="ruby-identifier">all_resources</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">search</span>)
+  <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">session_id</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;--connection&quot;</span>).<span class="ruby-identifier">all_resources</span>(<span class="ruby-identifier">klass</span>, <span class="ruby-identifier">search</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -235,11 +234,7 @@
           
           <p>Establishes connection to a FHIR server by instantiating <code>FhirServerInteraction</code></p>
 
-<p>Creates new <code>Hash</code> to allow for server-side, session-specific data storage and access in  memory </p>
-
-<p>Updates active timer for this session to prevent premature pruning</p>
-
-<p>Calls private <code>prune</code> method to weed out old sessions</p>
+<p>Updates active timer for this session&#39;s connection to prevent premature pruning</p>
 
 <p><strong>Params</strong></p>
 <ul><li>
@@ -256,17 +251,15 @@
 
           
           <div class="method-source-code" id="establish-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 39</span>
+            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 32</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">establish</span>(<span class="ruby-identifier">session_id</span>, <span class="ruby-identifier">url</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">oauth2_id</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">oauth2_secret</span> = <span class="ruby-keyword">nil</span>)
+  <span class="ruby-identifier">conkey</span> = <span class="ruby-identifier">session_id</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;--connection&quot;</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">established?</span>(<span class="ruby-identifier">session_id</span>)
-    <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:active</span>] = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
-    <span class="ruby-identifier">prune</span>
+    <span class="ruby-identifier">client</span> = <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">conkey</span>)
   <span class="ruby-keyword">else</span>
-    <span class="ruby-identifier">prune</span>
-    <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>] = { <span class="ruby-value">active:</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> }
-    <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:fsi</span>] = <span class="ruby-constant">FhirServerInteraction</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">oauth2_id</span>, <span class="ruby-identifier">oauth2_secret</span>)
-    <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:ss</span>] = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">client</span> = <span class="ruby-constant">FhirServerInteraction</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">oauth2_id</span>, <span class="ruby-identifier">oauth2_secret</span>)
   <span class="ruby-keyword">end</span>
+  <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">conkey</span>, <span class="ruby-identifier">client</span>, <span class="ruby-value">expires_in:</span> <span class="ruby-ivar">@expiry_time</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -293,21 +286,23 @@
           
           <p>Gets <code>FHIR::Client</code> instance associated with the provided <code>session_id</code></p>
 
-<p>Updates active timer for this session to prevent premature pruning</p>
+<p>Updates active timer for this session&#39;s connection to prevent premature pruning</p>
 
 <p><strong>Params</strong></p>
 <ul><li>
 <p><code>session_id</code> - Indicates which session to get the <code>FHIR::Client</code> from (use <code>session.id</code>)</p>
 </li></ul>
+
+<p><strong>Returns</strong> - This session&#39;s instance of FHIR::Client</p>
           
           
 
           
           <div class="method-source-code" id="fhir_client-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 85</span>
+            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 79</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">fhir_client</span>(<span class="ruby-identifier">session_id</span>)
   <span class="ruby-identifier">active</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:fsi</span>].<span class="ruby-identifier">client</span>
+  <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">session_id</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;--connection&quot;</span>).<span class="ruby-identifier">client</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -334,7 +329,7 @@
           
           <p>Retrieves a value from storage by its <code>key</code></p>
 
-<p>Updates active timer for this session to prevent premature pruning</p>
+<p>Updates active timer for this value to prevent premature pruning</p>
 
 <p><strong>Params</strong></p>
 <ul><li>
@@ -347,10 +342,10 @@
 
           
           <div class="method-source-code" id="from_storage-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 152</span>
+            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 143</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">from_storage</span>(<span class="ruby-identifier">session_id</span>, <span class="ruby-identifier">key</span>)
-  <span class="ruby-identifier">active</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:ss</span>][<span class="ruby-identifier">key</span>]
+  <span class="ruby-identifier">active</span>(<span class="ruby-identifier">session_id</span>, <span class="ruby-identifier">key</span>)
+  <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">session_id</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;--&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">key</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -377,7 +372,7 @@
           
           <p>Resets <code>FhirServerInteraction</code> connection according to the provided params</p>
 
-<p>Updates active timer for this session to prevent premature pruning</p>
+<p>Updates active timer for this session&#39;s connection to prevent premature pruning</p>
 
 <p><strong>Params</strong></p>
 <ul><li>
@@ -394,53 +389,11 @@
 
           
           <div class="method-source-code" id="reset_connection-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 70</span>
+            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">reset_connection</span>(<span class="ruby-identifier">session_id</span>, <span class="ruby-identifier">url</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">oauth2_id</span> = <span class="ruby-keyword">nil</span>, <span class="ruby-identifier">oauth2_secret</span> = <span class="ruby-keyword">nil</span>)
-  <span class="ruby-identifier">active</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:fsi</span>].<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">oauth2_id</span>, <span class="ruby-identifier">oauth2_secret</span>)
-<span class="ruby-keyword">end</span></pre>
-          </div>
-          
-        </div>
-
-        
-
-        
-      </div>
-
-    
-      <div id="method-c-storage" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">storage</span><span
-            class="method-args">(session_id)</span>
-          
-          <span class="method-click-advice">click to toggle source</span>
-          
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Gets the specified session&#39;s entire storage hash</p>
-
-<p>Updates active timer for this session to prevent premature pruning</p>
-
-<p><strong>Params</strong></p>
-<ul><li>
-<p><code>session_id</code> - Indicates which session&#39;s storage hash to retrieve (use <code>session.id</code>)</p>
-</li></ul>
-
-<p><strong>Returns</strong> - A hash of every key-value pairing this session has stored</p>
-          
-          
-
-          
-          <div class="method-source-code" id="storage-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 169</span>
-<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">storage</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-identifier">active</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:ss</span>]
+  <span class="ruby-identifier">conkey</span> = <span class="ruby-identifier">session_id</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;--connection&quot;</span>
+  <span class="ruby-identifier">new_connection</span> = <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">conkey</span>).<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">oauth2_id</span>, <span class="ruby-identifier">oauth2_id</span>)
+  <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">conkey</span>, <span class="ruby-identifier">new_connection</span>, <span class="ruby-value">expires_in:</span> <span class="ruby-ivar">@expiry_time</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -467,8 +420,6 @@
           
           <p>Stores <code>value</code> in this sessions in-memory storage to be later retrieved by <code>key</code></p>
 
-<p>Updates active timer for this session to prevent premature pruning</p>
-
 <p><strong>Params</strong></p>
 <ul><li>
 <p><code>session_id</code> - Indicates which session&#39;s storage to store <code>value</code> in (use <code>session.id</code>)</p>
@@ -482,10 +433,9 @@
 
           
           <div class="method-source-code" id="store-source">
-            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 135</span>
+            <pre><span class="ruby-comment"># File app/models/session_handler.rb, line 127</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">store</span>(<span class="ruby-identifier">session_id</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
-  <span class="ruby-identifier">active</span>(<span class="ruby-identifier">session_id</span>)
-  <span class="ruby-ivar">@sessions</span>[<span class="ruby-identifier">session_id</span>][<span class="ruby-value">:ss</span>][<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>
+  <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">cache</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">session_id</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;--&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>, <span class="ruby-value">expires_in:</span> <span class="ruby-ivar">@expiry_time</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
