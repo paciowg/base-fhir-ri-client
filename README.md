@@ -21,7 +21,7 @@ pages, ready to be customized.
 
 ### Model Configuration
 
-To track session-specifics server-side (including FHIR server connection and 
+To track session-specific server-side (including FHIR server connection and 
 session-based storage), this boilerplate is configured to use it's own custom 
 [SessionHandler](http://htmlpreview.github.io/?https://github.com/paciowg/base-fhir-client-rails/blob/master/doc/SessionHandler.html)
 
@@ -73,7 +73,6 @@ mkdir base-fhir-client-rails
 cd base-fhir-client-rails
 git clone https://github.com/paciowg/base-fhir-client-rails
 ```
-
 
 ## Copyright
 

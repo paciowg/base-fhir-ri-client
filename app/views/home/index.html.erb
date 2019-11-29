@@ -24,12 +24,12 @@
                     <li>
                         In essence, it handles both a FHIR server connection and session-specfic 
                         storage in memory <br />
-                        After 2 straight hours of session inactivity, it is deleted to protect 
+                        After 30 minutes of session inactivity, it is deleted to protect 
                         against memory leaks
                         <ul>
                             <li>
                                 All <code>SessionHandler</code> methods begin by updating the 
-                                session's last active time, which resets the 2 hour timer <br /> 
+                                session's last active time, which resets the 30 minute timer <br /> 
                                 If this will not suffice and you wish to indicate that a session 
                                 is still active without directly using another 
                                 <code>SessionHandler</code> method, you can just call 
@@ -82,28 +82,24 @@
                         Storage
                         <ul>
                             <li>
-                                Establishing <code>SessionHandler</code> initializes a 
-                                <code>Hash</code> for in-memory server-side session-specific 
-                                storage
+                                Establishing <code>SessionHandler</code> begins storage in 
+                                <code>Rails.cache</code> for in-memory server-side 
+                                session-specific storage
                             </li>
                             <li>
-                                There are 3 storage methods in <code>SessionHandler</code> which 
+                                There are 2 storage methods in <code>SessionHandler</code> which 
                                 can each be seen in more detail 
                                 <a href="<%= sh_doc %>" target="_blank">here</a>
                                 <ul>
                                     <li>
                                         <code>SessionHandler.store</code> - stores 
-                                        <code>value</code> in a hash with a key of 
-                                        <code>key</code> 
-                                    </li>
-                                    <li>
-                                        <code>SessionHandler.storage</code> - returns the entire 
-                                        hash of everything that's been stored
+                                        <code>value</code> in <code>Rails.cache</code> with a key 
+                                        of <code>key</code> 
                                     </li>
                                     <li>
                                         <code>SessionHandler.from_storage</code> - returns a 
-                                        specific value from storage as referenced by 
-                                        <code>key</code>
+                                        specific value from the <code>Rails.cache</code> storage 
+                                        as referenced by <code>key</code>
                                     </li>
                                 </ul>
                             </li>
