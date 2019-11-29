@@ -1,17 +1,29 @@
 # Base FHIR Client (Rails)
 
-Provides the boilerplate code for jumpstarting any rails-based FHIR client. 
-Configured for Heroku deployment (`rails_12factor` gem included, and db 
-configured to use `pg` instead of `sqlite3`)
+Provides the boilerplate code for jumpstarting any rails-based FHIR client.
+
+Configured for Heroku deployment.
 
 ## Use
 
 To use, just fork this repository and begin building your rails app according 
 to your own specs.
 
-### Customization
+### View Configuration
 
-TODO
+Configured to allow for immediate use of 
+[Bootstrap](https://getbootstrap.com/docs/4.3/getting-started/introduction/),
+[bootstrap-toggle](https://www.bootstraptoggle.com/), and
+[jQuery](https://api.jquery.com/)
+
+Also comes starts off with Header and Footer partials that autoload on all 
+pages, ready to be customized.
+
+### Model Configuration
+
+To track session-specifics server-side (including FHIR server connection and 
+session-based storage), this boilerplate is configured to use it's own custom 
+[SessionHandler](http://htmlpreview.github.io/?https://github.com/paciowg/base-fhir-client-rails/blob/master/doc/SessionHandler.html)
 
 ### Running
 
@@ -55,12 +67,12 @@ furthering development of this base project, follow the below instructions.
 
 To pull in remote `base-fhir-client-rails` from github for local development:
 
-    ```
-    cd ~/path/to/your/workspace/
-    mkdir base-fhir-client-rails
-    cd base-fhir-client-rails
-    git clone https://github.com/paciowg/base-fhir-client-rails
-    ```
+```
+cd ~/path/to/your/workspace/
+mkdir base-fhir-client-rails
+cd base-fhir-client-rails
+git clone https://github.com/paciowg/base-fhir-client-rails
+```
 
 
 ## Copyright
