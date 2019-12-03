@@ -1,6 +1,6 @@
-# Functional Status 
+# Functional Status RI Client
 
-Reference Implementation client for the [PACIO Functional Status 
+Reference implementation client for the [PACIO Functional Status 
 IG](https://paciowg.github.io/functional-status-ig).
 
 Configured for Heroku deployment.
