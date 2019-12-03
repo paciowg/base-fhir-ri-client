@@ -5,6 +5,15 @@ IG](https://paciowg.github.io/functional-status-ig).
 
 Configured for Heroku deployment.
 
+## Installation
+
+To pull in remote `functional-status-ri-client` from github for local development:
+
+```
+cd ~/path/to/your/workspace/
+git clone https://github.com/paciowg/functional-status-ri-client.git
+```
+
 ## Running
 
 Since this app is configured for heroku deployment, running it is slightly 
@@ -38,15 +47,6 @@ more effort than just `rails s`.
     pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop
     ```
     (This also gets old. Personally, I made a `pg_stop` alias for this command)
-
-## Installation
-
-To pull in remote `functional-status-ri-client` from github for local development:
-
-```
-cd ~/path/to/your/workspace/
-git clone https://github.com/paciowg/functional-status-ri-client.git
-```
 
 ## Copyright
 
