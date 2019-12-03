@@ -1,34 +1,14 @@
-# Base FHIR Client (Rails)
+# Functional Status 
 
-Provides the boilerplate code for jumpstarting any rails-based FHIR client.
+Reference Implementation client for the [PACIO Functional Status 
+IG](https://paciowg.github.io/functional-status-ig).
 
 Configured for Heroku deployment.
 
-## Use
+## Running
 
-To use, just fork this repository and begin building your rails app according 
-to your own specs.
-
-### View Configuration
-
-Configured to allow for immediate use of 
-[Bootstrap](https://getbootstrap.com/docs/4.3/getting-started/introduction/),
-[bootstrap-toggle](https://www.bootstraptoggle.com/), and
-[jQuery](https://api.jquery.com/)
-
-Also comes starts off with Header and Footer partials that autoload on all 
-pages, ready to be customized.
-
-### Model Configuration
-
-To track session-specific server-side (including FHIR server connection and 
-session-based storage), this boilerplate is configured to use it's own custom 
-[SessionHandler](http://htmlpreview.github.io/?https://github.com/paciowg/base-fhir-client-rails/blob/master/doc/SessionHandler.html)
-
-### Running
-
-Since this base app is configured for heroku deployment, running it is 
-slightly more effort than just `rails s`.
+Since this app is configured for heroku deployment, running it is slightly 
+more effort than just `rails s`.
 
 1. To start, you must be running `postgres`
 
@@ -61,17 +41,11 @@ slightly more effort than just `rails s`.
 
 ## Installation
 
-If you intend on building off of this project, please fork the 
-`base-fhir-client-rails` repo and go from there. However, if you intend on 
-furthering development of this base project, follow the below instructions.
-
-To pull in remote `base-fhir-client-rails` from github for local development:
+To pull in remote `functional-status-ri-client` from github for local development:
 
 ```
 cd ~/path/to/your/workspace/
-mkdir base-fhir-client-rails
-cd base-fhir-client-rails
-git clone https://github.com/paciowg/base-fhir-client-rails
+git clone https://github.com/paciowg/functional-status-ri-client.git
 ```
 
 ## Copyright
