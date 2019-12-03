@@ -8,7 +8,12 @@ class HomeController < ApplicationController
   private
 
   def establish_session_handler
-    SessionHandler.establish(session.id)
+    Thread.new do
+      while (session.id.nil?) # rails session info loads lazily
+        sleep(0.1)
+      end
+      SessionHandler.establish(session.id)
+    end
   end
 
 end
