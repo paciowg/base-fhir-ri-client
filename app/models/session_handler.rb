@@ -30,13 +30,12 @@ class SessionHandler
   #   +FhirServerInteraction+ and replaces it as the default OAuth2 secret for this session
 
   def self.establish(session_id, url = nil, oauth2_id = nil, oauth2_secret = nil)
-    conkey = session_id + "--connection"
     if established?(session_id)
-      client = Rails.cache.read(conkey)
+      client = Rails.cache.read(session_id + "--connection")
     else
       client = FhirServerInteraction.new(url, oauth2_id, oauth2_secret)
     end
-    Rails.cache.write(conkey, client, expires_in: @expiry_time)
+    store(session_id, "connection", client)
   end
 
 
@@ -59,9 +58,9 @@ class SessionHandler
   #   +FhirServerInteraction+ and replaces it as the default OAuth2 secret for this session
 
   def self.reset_connection(session_id, url = nil, oauth2_id = nil, oauth2_secret = nil)
-    conkey = session_id + "--connection"
-    new_connection = Rails.cache.read(conkey).connect(url, oauth2_id, oauth2_id)
-    Rails.cache.write(conkey, new_connection, expires_in: @expiry_time)
+    new_connection = Rails.cache.read(session_id + "--connection")
+    new_connection.connect(url, oauth2_id, oauth2_id)
+    store(session_id, "connection", new_connection)
   end
 
 
@@ -77,8 +76,7 @@ class SessionHandler
   # *Returns* - This session's instance of FHIR::Client
 
   def self.fhir_client(session_id)
-    active(session_id)
-    Rails.cache.read(session_id + "--connection").client
+    from_storage(session_id, "connection").client
   end
 
 
@@ -108,8 +106,7 @@ class SessionHandler
   # specified, match the +search+
 
   def self.all_resources(session_id, klasses, search = {})
-    active(session_id)
-    Rails.cache.read(session_id + "--connection").all_resources(klass, search)
+    from_storage(session_id, "connection").all_resources(klasses, search)
   end
 
 
@@ -125,7 +122,7 @@ class SessionHandler
   # * +value+ - The value to store for future access
 
   def self.store(session_id, key, value)
-    Rails.cache.write(session_id + "--" + key, value, expires_in: @expiry_time)
+    Rails.cache.write(session_id + "--" + key, value, { expires_in: @expiry_time })
   end
 
 
@@ -137,6 +134,8 @@ class SessionHandler
   # *Params*
   #
   # * +session_id+ - Indicates which session's storage to access (use +session.id+)
+  # 
+  # * +key+ - The key with which the return value was stored
   # 
   # *Returns* - A specific value from storage that was stored with the provided +key+
 
@@ -159,7 +158,8 @@ class SessionHandler
 
   def self.active(session_id, key = nil)
     cache_key = session_id + "--" + (key.nil? ? "connection" : key)
-    Rails.cache.write(cache_key, Rails.cache.read(cache_key), expires_in: @expiry_time)
+    val = Rails.cache.read(cache_key)
+    store(session_id, cache_key, val)
   end
 
   private
@@ -169,7 +169,7 @@ class SessionHandler
 
   def self.established?(session_id, key = nil)
     cache_key = session_id + "--" + (key.nil? ? "connection" : key)
-    Rails.cache.read(cache_key).nil?
+    !(Rails.cache.read(cache_key).nil?)
   end
 
 end

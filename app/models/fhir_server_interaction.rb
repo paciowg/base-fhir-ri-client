@@ -1,25 +1,25 @@
 class FhirServerInteraction
 
-  # Automatically set to HAPI's public testing FHIR server
-  # TODO - REMEMBER TO REPLACE WITH YOUR FHIR SERVER'S BASE URL
-  @base_server_url = "http://hapi.fhir.org/baseR4"
-
-  # TODO - SET OAUTH2 ID AND OAUTH2 SECRET IF SERVER USES OAUTH2 AUTHENTICATION
-  @oauth2_id = 'example'
-  @oauth2_secret = 'secret'
-
   def initialize(url = nil, oauth2_id = nil, oauth2_secret = nil)
+    # Automatically set to HAPI's public testing FHIR server
+    # TODO - REMEMBER TO REPLACE WITH YOUR FHIR SERVER'S BASE URL
+    @base_server_url = "http://hapi.fhir.org/baseR4"
+  
+    # TODO - SET OAUTH2 ID AND OAUTH2 SECRET IF SERVER USES OAUTH2 AUTHENTICATION
+    @oauth2_id = 'example'
+    @oauth2_secret = 'secret'
+
     connect(url, oauth2_id, oauth2_secret)
   end
 
   def connect(url = nil, oauth2_id = nil, oauth2_secret = nil)
-    @base_server_url = url.nil? ? @base_server_url : url
-    @oauth2_id = oauth2_id.nil? ? @oauth2_id : oauth2_id
-    @oauth2_secret = oauth2_secret.nil? ? @oauth2_secret : oauth2_secret
+    @base_server_url = url unless url.nil?
+    @oauth2_id = oauth2_id unless oauth2_id.nil?
+    @oauth2_secret = oauth2_secret unless oauth2_secret.nil?
 
     @client = FHIR::Client.new(@base_server_url)
-    options = client.get_oauth2_metadata_from_conformance
-    unless options.empty?
+    options = @client.get_oauth2_metadata_from_conformance
+    unless options.blank?
       @client.set_oauth2_auth(@oauth2_id, @oauth2_secret, options[:authorize_url], 
           options[:token_url], options[:site])
     end
@@ -27,7 +27,7 @@ class FhirServerInteraction
   end
   
   def all_resources(klasses = nil, search = nil)
-    replies = replies(klasses, search)
+    replies = all_replies(klasses, search)
     return nil unless replies
     resources = []
     replies.each do |reply|
