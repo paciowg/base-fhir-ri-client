@@ -7,8 +7,8 @@
             <ul class="patient-list">
                 <% @patients.each do |patient| %>
                     <% begin %>
-                    <% official = patient.name.select{ |n| n.use.eql?("official") } %>
-                    <% name = official.first.given.join(" ") + " " + official.first.family %>
+                        <% official = patient.name.select{ |n| n.use.eql?("official") } %>
+                        <% name = official.first.family + ", " + official.first.given.join(" ")  %>
                     <% rescue %>
                         <% next %>
                     <% end %>
