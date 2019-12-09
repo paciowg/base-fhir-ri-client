@@ -3,7 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 .select-patient-container {
-    margin: 50pt auto;
+    margin: 25pt auto 0;
 }
 
 .select-patient-header {
@@ -13,5 +13,24 @@
 
 .select-patient-form {
     width: 350pt;
-    margin: 20pt auto;
+    margin: 10pt auto 0;
+}
+
+.patient-filter {
+    margin-bottom: 10pt;
+}
+
+.patient-list-container {
+    overflow: scroll;
+    min-height: 100pt;
+    height: calc(100vh - 215pt)
+}
+
+.patient-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.patient-option {
+    margin-bottom: 5pt;
 }

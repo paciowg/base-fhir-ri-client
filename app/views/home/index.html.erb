@@ -1,28 +1,25 @@
 <div class="select-patient-container">
-    <h2 class="select-patient-header">Whose records would you like to see?</h2>
+    <h2 class="select-patient-header">Choose whose records to see</h2>
     <form class="select-patient-form" action="/dashboard" accept-charset="UTF-8" method="get"> 
-        <div class="input-group">
-            <%= text_field_tag "patient", nil, list: (@patients.empty? ? nil : "patient-list"), 
-                    class: "form-control", placeholder: "Enter a patient's name here", 
-                    required: true %>
-            <% unless @patients.empty? %>
-                <datalist id="patient-list">
-                    <% @patients.each do |patient| %>
-                        <% begin %>
-                            <% patient_name = patient.name.first.given.first + " " %>
-                            <% patient_name += patient.name.first.family %>
-                            <option value="<%= patient_name %>"><%= patient_name %></option>
-                        <% rescue %>
-                            <% next %>
-                        <% end %>
+        <%= text_field_tag nil, nil, class: "form-control patient-filter", 
+                placeholder: "Filter patients by name" %>
+        <div class="patient-list-container">
+            <ul class="patient-list">
+                <% @patients.each do |patient| %>
+                    <% begin %>
+                    <% official = patient.name.select{ |n| n.use.eql?("official") } %>
+                    <% name = official.first.given.join(" ") + " " + official.first.family %>
+                    <% rescue %>
+                        <% next %>
                     <% end %>
-                </datalist>
-            <% end %>
-            <div class="input-group-append">
-                <button id="select-patient-submit" class="btn btn-primary" type="submit"> 
-                    Search
-                </button>
-            </div>
+                    <li>
+                        <button class="btn btn-primary btn-lg btn-block patient-option" 
+                                type="submit" name="patient" value="<%= patient.id %>">
+                            <%= name %>
+                        </button>
+                    </li>
+                <% end %>
+            </ul>
         </div>
     </form>
 </div>
