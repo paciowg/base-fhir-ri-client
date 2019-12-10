@@ -1,0 +1,18 @@
+// Changes here are automatically applied in application.scss
+// To explicitly reference these variables in other stylesheets, just:
+// import 'colors';
+
+// These are the bootstrap color variables. 
+// These settings will automatically override bootstrap's 
+$primary: #6D96AD; // bootstrap originally has this set to #007BFF
+$secondary: #6C757D; // bootstrap originally has this set to #6C757D
+$success: #28A745; // same as bootstrap
+$danger: #DC3545; // same as bootstrap
+$warning: #FFC107; // same as bootstrap
+$info: #17A2B8; // same as bootstrap
+$light: #F8F9FA; // same as bootstrap
+$dark: #343A40; // same as bootstrap
+$code-color: #009030; // bootstrap originally has this set to #E83E8C
+
+// Project-specific background color (not a color variable in bootstrap)
+$background: #EFFFFA;
