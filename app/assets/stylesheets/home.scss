@@ -23,7 +23,8 @@
 .patient-list-container {
     overflow: scroll;
     min-height: 100pt;
-    height: calc(100vh - 215pt)
+    height: calc(100vh - 215pt);
+    max-height: 300pt;
 }
 
 .patient-list {

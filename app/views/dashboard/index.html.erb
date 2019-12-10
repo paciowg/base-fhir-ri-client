@@ -1,1 +1,18 @@
-<h1><%= @patient_name_last + ", " + @patient_name_first + " " + @patient_name_middle %></h1>
+<div class="dashboard-header-container">
+    <div class="dashboard-header-profile card">
+        <%= image_tag @patient.photo_path, class: "card-img-top" %>
+        <div class="card-body">
+            <p class="card-text"><%= @patient.full %></p>
+        </div>
+    </div>
+    <h2 class="dashboard-header-title"><%= @patient.first -%>'s Dashboard</h2>
+    <div class="dashboard-header-profile-replica"></div>
+    <div class="dashboard-header-text">
+        <p>
+            Full Name: <span><%= @patient.full -%></span><br/>
+            Gender: <span><%= @patient.gender.capitalize -%></span><br/>
+            Age: <span><%= @patient.age -%> years old</span><br/>
+            Birthday: <span><%= @patient.birthday_text -%></span><br/>
+        </p>
+    </div>
+</div>

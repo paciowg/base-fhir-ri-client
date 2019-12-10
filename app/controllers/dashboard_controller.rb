@@ -5,18 +5,13 @@ class DashboardController < ApplicationController
 
     patients = Rails.cache.read("patients")
     if patients.nil?
-      @patient = SessionHandler.fhir_client(session.id).read(FHIR::Patient, pat_param).resource
+      fhir_patient = SessionHandler.fhir_client(session.id).read(FHIR::Patient, pat_param).resource
     else
-      @patient = patients.select{ |patient| patient.id.eql?(pat_param) }.first
+      fhir_patient = patients.select{ |patient| patient.id.eql?(pat_param) }.first
     end
 
-    redirect_to :root && return if @patient.blank?
+    redirect_to :root && return if fhir_patient.blank?
 
-    patient_name = @patient.name.select{ |name| name.use.eql?("official") }.first
-
-    @patient_name_first = patient_name.given.first
-    @patient_name_middle = patient_name.given[1..-1].join(" ")
-    @patient_name_middle ||= ""
-    @patient_name_last = patient_name.family
+    @patient = CondensedPatient.new(fhir_patient)
   end
 end
